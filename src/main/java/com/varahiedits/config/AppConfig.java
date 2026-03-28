@@ -20,7 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AppConfig {
 
     private final AdminUserRepository adminUserRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder; 
+    
 
     
     @Value("${app.admin.username}")
