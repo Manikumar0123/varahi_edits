@@ -1,19 +1,21 @@
 package com.varahiedits.service;
 
-import com.varahiedits.dto.BookingRequest;
-import com.varahiedits.model.Booking;
-import com.varahiedits.model.Booking.BookingStatus;
-import com.varahiedits.repository.BookingRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.varahiedits.dto.BookingRequest;
+import com.varahiedits.model.Booking;
+import com.varahiedits.model.Booking.BookingStatus;
+import com.varahiedits.repository.BookingRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +30,34 @@ public class BookingService {
     /**
      * Create a new booking from contact form submission
      */
+//    public Booking createBooking(BookingRequest request) {
+//        Booking booking = Booking.builder()
+//                .name(request.getName())
+//                .phone(request.getPhone())
+//                .email(request.getEmail())
+//                .service(request.getService())
+//                .message(request.getMessage())
+//                .status(BookingStatus.PENDING)
+//                .build();
+//
+//        Booking saved = bookingRepository.save(booking);
+//        log.info("New booking created: ID={}, Service={}, Customer={}", saved.getId(), saved.getService(), saved.getName());
+//
+//        // Send notifications asynchronously (won't block response)
+//        try {
+//            emailService.sendBookingConfirmationToCustomer(saved);
+//            emailService.sendBookingAlertToOwner(saved);
+//            notificationService.sendWhatsAppAlertToOwner(saved);
+//            notificationService.sendWhatsAppConfirmationToCustomer(saved);
+//        } catch (Exception e) {
+//            log.error("Notification failed but booking saved", e);
+//        }
+//        return saved;
+//    }
+    
     @Transactional
     public Booking createBooking(BookingRequest request) {
+
         Booking booking = Booking.builder()
                 .name(request.getName())
                 .phone(request.getPhone())
@@ -40,17 +68,17 @@ public class BookingService {
                 .build();
 
         Booking saved = bookingRepository.save(booking);
-        log.info("New booking created: ID={}, Service={}, Customer={}", saved.getId(), saved.getService(), saved.getName());
 
-        // Send notifications asynchronously (won't block response)
+        // ✅ Wrap ALL external calls
         try {
             emailService.sendBookingConfirmationToCustomer(saved);
             emailService.sendBookingAlertToOwner(saved);
             notificationService.sendWhatsAppAlertToOwner(saved);
             notificationService.sendWhatsAppConfirmationToCustomer(saved);
         } catch (Exception e) {
-            log.error("Notification failed but booking saved", e);
+            log.error("External service failed, but booking saved", e);
         }
+
         return saved;
     }
 
