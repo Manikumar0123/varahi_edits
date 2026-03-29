@@ -43,11 +43,14 @@ public class BookingService {
         log.info("New booking created: ID={}, Service={}, Customer={}", saved.getId(), saved.getService(), saved.getName());
 
         // Send notifications asynchronously (won't block response)
-        emailService.sendBookingConfirmationToCustomer(saved);
-        emailService.sendBookingAlertToOwner(saved);
-        notificationService.sendWhatsAppAlertToOwner(saved);
-        notificationService.sendWhatsAppConfirmationToCustomer(saved);
-
+        try {
+            emailService.sendBookingConfirmationToCustomer(saved);
+            emailService.sendBookingAlertToOwner(saved);
+            notificationService.sendWhatsAppAlertToOwner(saved);
+            notificationService.sendWhatsAppConfirmationToCustomer(saved);
+        } catch (Exception e) {
+            log.error("Notification failed but booking saved", e);
+        }
         return saved;
     }
 
