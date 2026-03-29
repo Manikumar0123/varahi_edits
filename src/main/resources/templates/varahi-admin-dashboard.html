@@ -332,7 +332,7 @@ document.querySelectorAll('button,a,input,select,textarea').forEach(el=>{
   el.addEventListener('mouseleave',()=>{cur.style.transform='translate(-50%,-50%) scale(1)';ring.style.width='28px';ring.style.height='28px';});
 });
 
-const API='http://localhost:8080';
+const API='https://varahiedits-production.up.railway.app';
 let token=sessionStorage.getItem('ve_token')||'';
 let allBookings=[];
 let currentFilter='ALL';
