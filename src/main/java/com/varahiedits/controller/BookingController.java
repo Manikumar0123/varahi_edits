@@ -27,15 +27,19 @@ public class BookingController {
      */
     @PostMapping("/submit")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Map<String, Object>> submitBooking(@Valid @RequestBody BookingRequest request) {
+    public ApiResponse<?> submitBooking(@Valid @RequestBody BookingRequest request) {
         Booking booking = bookingService.createBooking(request);
-        return ApiResponse.success(
-            "Your booking has been received! We will contact you within 24 hours.",
-            Map.of(
-                "bookingId", booking.getId(),
-                "status", booking.getStatus(),
-                "service", booking.getService()
-            )
-        );
+        return ApiResponse.success("Saved", booking);
     }
+//    public ApiResponse<Map<String, Object>> submitBooking(@Valid @RequestBody BookingRequest request) {
+//        Booking booking = bookingService.createBooking(request);
+//        return ApiResponse.success(
+//            "Your booking has been received! We will contact you within 24 hours.",
+//            Map.of(
+//                "bookingId", booking.getId(),
+//                "status", booking.getStatus(),
+//                "service", booking.getService()
+//            )
+//        );
+//    }
 }
