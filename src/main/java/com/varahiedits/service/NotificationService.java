@@ -34,23 +34,23 @@ public class NotificationService {
         System.out.println("TOKEN = " + authToken);
         System.out.println("FROM = " + whatsappFrom);
     }
-    @PostConstruct
-    public void testTwilio() {
-        try {
-            Twilio.init(accountSid, authToken);
-
-            Message message = Message.creator(
-                    new PhoneNumber("whatsapp:+919676633834"),
-                    new PhoneNumber("whatsapp:+14783128121"),
-                    "Test message"
-            ).create();
-
-            System.out.println("TEST SUCCESS: " + message.getSid());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @PostConstruct
+//    public void testTwilio() {
+//        try {
+//            Twilio.init(accountSid, authToken);
+//
+//            Message message = Message.creator(
+//                    new PhoneNumber("whatsapp:+919676633834"),
+//                    new PhoneNumber("whatsapp:+14783128121"),
+//                    "Test message"
+//            ).create();
+//
+//            System.out.println("TEST SUCCESS: " + message.getSid());
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @PostConstruct
     public void init() {
