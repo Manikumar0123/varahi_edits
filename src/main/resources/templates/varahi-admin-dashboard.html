@@ -348,7 +348,12 @@ window.addEventListener('load',()=>{
   loadDashboard(); loadAllBookings();
 });
 
-function authHeaders(){return{'Content-Type':'application/json','Authorization':'Bearer '+token};}
+function authHeaders(){
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + sessionStorage.getItem('ve_token')
+  };
+}
 
 function showToast(msg,type='success'){
   const t=document.createElement('div');t.className='toast'+(type==='error'?' error':'');t.textContent=msg;
