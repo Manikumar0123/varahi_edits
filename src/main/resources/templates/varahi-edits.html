@@ -585,7 +585,7 @@ async function submitForm() {
   btn.textContent = 'Sending...';
   btn.disabled = true;
 
-  try {
+ /* try {
     const res = await fetch('https://varahiedits-production.up.railway.app/api/bookings/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -604,6 +604,40 @@ async function submitForm() {
     // Offline/dev mode — show success anyway for demo
     document.getElementById('form-fields').style.display = 'none';
     document.getElementById('form-success').style.display = 'block';
+  }*/
+  try {
+    const res = await fetch('/api/bookings/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, email, service, message })
+    });
+
+    // 🔥 IMPORTANT: handle HTTP errors
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("❌ API ERROR:", text);
+      alert("Server error: " + text);
+      btn.textContent = 'Send Booking Request';
+      btn.disabled = false;
+      return;
+    }
+
+    const data = await res.json();
+
+    if (data.success) {
+      document.getElementById('form-fields').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    } else {
+      alert("Failed: " + JSON.stringify(data));
+      btn.textContent = 'Send Booking Request';
+      btn.disabled = false;
+    }
+
+  } catch (err) {
+    console.error("❌ NETWORK ERROR:", err);
+    alert("Network error. Check console.");
+    btn.textContent = 'Send Booking Request';
+    btn.disabled = false;
   }
 }
 </script>
