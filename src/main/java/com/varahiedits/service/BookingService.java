@@ -73,8 +73,8 @@ public class BookingService {
         try {
             emailService.sendBookingConfirmationToCustomer(saved);
             emailService.sendBookingAlertToOwner(saved);
-            notificationService.sendWhatsAppAlertToOwner(saved);
-            notificationService.sendWhatsAppConfirmationToCustomer(saved);
+           // notificationService.sendWhatsAppAlertToOwner(saved);
+            //notificationService.sendWhatsAppConfirmationToCustomer(saved);
         } catch (Exception e) {
             log.error("External service failed, but booking saved", e);
         }
