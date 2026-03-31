@@ -334,6 +334,10 @@ document.querySelectorAll('button,a,input,select,textarea').forEach(el=>{
 
 const API='https://varahiedits-production.up.railway.app';
 let token=sessionStorage.getItem('ve_token')||'';
+if(!token){
+  alert("Please login first");
+  window.location.href = "/admin";
+}
 let allBookings=[];
 let currentFilter='ALL';
 

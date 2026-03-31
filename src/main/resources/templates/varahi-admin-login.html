@@ -152,7 +152,7 @@ async function doLogin(){
   err.style.display='none';
   if(!username||!password){err.textContent='Please enter both username and password.';err.style.display='block';return;}
   btn.textContent='Signing in...';btn.disabled=true;
-  try{
+  /*try{
     const res=await fetch('https://varahiedits-production.up.railway.app/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
     const data=await res.json();
     if(data.success&&data.data&&data.data.token){
@@ -167,6 +167,33 @@ async function doLogin(){
 	    btn.disabled=false;
 	sessionStorage.setItem('ve_user','admin');
     window.location.href='/admin/dashboard';
+  }*/
+  try{
+    const res = await fetch('https://varahiedits-production.up.railway.app/api/auth/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username,password})
+    });
+
+    const data = await res.json();
+
+    if(data.success && data.data && data.data.token){
+      sessionStorage.setItem('ve_token', data.data.token);
+      sessionStorage.setItem('ve_user', data.data.username);
+      window.location.href='/admin/dashboard';
+    }else{
+      err.textContent='Invalid credentials.';
+      err.style.display='block';
+      btn.textContent='Sign In to Dashboard';
+      btn.disabled=false;
+    }
+
+  }catch(e){
+    console.error(e);
+    err.textContent='Server error. Try again.';
+    err.style.display='block';
+    btn.textContent='Sign In to Dashboard';
+    btn.disabled=false;
   }
 }
 </script>
