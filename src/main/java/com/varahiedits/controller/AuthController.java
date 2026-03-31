@@ -31,7 +31,7 @@ public class AuthController {
     
     @PostMapping("/login")
     public ApiResponse<Map<String, String>> login(@Valid @RequestBody LoginRequest request) {
-    	//System.out.println(passwordEncoder.encode("admin123"));
+    	System.out.println(passwordEncoder.encode("Varahi@Admin2024"));
         AdminUser admin = adminUserRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
