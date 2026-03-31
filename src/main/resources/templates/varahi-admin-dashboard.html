@@ -439,6 +439,8 @@ function renderServiceChart(byService){
 
 async function loadAllBookings(){
   try{
+	console.log("TOKEN:", sessionStorage.getItem('ve_token'));
+	console.log("API URL:", API + '/api/admin/bookings');
 	const res = await fetch(API + '/api/admin/bookings', {
 	      headers: authHeaders()
 	    });
