@@ -55,10 +55,32 @@ public class BookingService {
 //        return saved;
 //    }
     
-    @Transactional
+    //@Transactional
     public Booking createBooking(BookingRequest request) {
 
-        Booking booking = Booking.builder()
+//        Booking booking = Booking.builder()
+//                .name(request.getName())
+//                .phone(request.getPhone())
+//                .email(request.getEmail())
+//                .service(request.getService())
+//                .message(request.getMessage())
+//                .status(BookingStatus.PENDING)
+//                .build();
+//
+//        Booking saved = bookingRepository.save(booking);
+//
+//        // ✅ Wrap ALL external calls
+//        try {
+//            emailService.sendBookingConfirmationToCustomer(saved);
+//            emailService.sendBookingAlertToOwner(saved);
+////            notificationService.sendWhatsAppAlertToOwner(saved);
+////            notificationService.sendWhatsAppConfirmationToCustomer(saved);
+//        } catch (Exception e) {
+//            log.error("External service failed, but booking saved", e);
+//        }
+//
+//        return saved;
+    	Booking booking = Booking.builder()
                 .name(request.getName())
                 .phone(request.getPhone())
                 .email(request.getEmail())
@@ -69,16 +91,13 @@ public class BookingService {
 
         Booking saved = bookingRepository.save(booking);
 
-        // ✅ Wrap ALL external calls
+        // 🔥 OUTSIDE transaction logic
         try {
             emailService.sendBookingConfirmationToCustomer(saved);
             emailService.sendBookingAlertToOwner(saved);
-//            notificationService.sendWhatsAppAlertToOwner(saved);
-//            notificationService.sendWhatsAppConfirmationToCustomer(saved);
         } catch (Exception e) {
-            log.error("External service failed, but booking saved", e);
+            log.error("Email failed but booking saved", e);
         }
-
         return saved;
     }
 
