@@ -27,8 +27,11 @@ public class AuthController {
      * POST /api/auth/login
      * Admin login – returns JWT token
      */
+    
+    
     @PostMapping("/login")
     public ApiResponse<Map<String, String>> login(@Valid @RequestBody LoginRequest request) {
+    	System.out.println(passwordEncoder.encode("admin123"));
         AdminUser admin = adminUserRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
