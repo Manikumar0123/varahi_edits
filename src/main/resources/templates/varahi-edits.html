@@ -586,7 +586,7 @@ async function submitForm() {
   btn.disabled = true;
 
   try {
-    const res = await fetch('http://localhost:8080/api/bookings/submit', {
+    const res = await fetch('https://varahiedits-production.up.railway.app/api/bookings/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, phone, email, service, message })
