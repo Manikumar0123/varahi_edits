@@ -11,6 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -20,6 +23,31 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request,
+//                                    HttpServletResponse response,
+//                                    FilterChain filterChain)
+//            throws ServletException, IOException {
+//
+//        String authHeader = request.getHeader("Authorization");
+//
+//        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//            String token = authHeader.substring(7);
+//            if (jwtUtil.validateToken(token)) {
+//                String username = jwtUtil.extractUsername(token);
+//                UsernamePasswordAuthenticationToken auth =
+//                        new UsernamePasswordAuthenticationToken(
+//                                username, null,
+//                                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+//                        );
+//                SecurityContextHolder.getContext().setAuthentication(auth);
+//            }
+//        }
+//
+//        filterChain.doFilter(request, response);
+//    }
+    
+    
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -30,13 +58,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+
             if (jwtUtil.validateToken(token)) {
-                String username = jwtUtil.extractUsername(token);
+
+                Claims claims = Jwts.parserBuilder()
+                        .setSigningKey(jwtUtil.getSigningKey()) // make method public
+                        .build()
+                        .parseClaimsJws(token)
+                        .getBody();
+
+                String username = claims.getSubject();
+                String role = claims.get("role", String.class);
+
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
-                                username, null,
-                                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                                username,
+                                null,
+                                List.of(new SimpleGrantedAuthority(role)) // ✅ dynamic role
                         );
+
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }

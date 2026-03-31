@@ -36,7 +36,10 @@ public class AuthController {
             throw new RuntimeException("Invalid credentials");
         }
 
-        String token = jwtUtil.generateToken(admin.getUsername());
+        String token = jwtUtil.generateToken(
+                admin.getUsername(),
+                admin.getRole()   // 🔥 PASS ROLE
+        );
         log.info("Admin login: {}", admin.getUsername());
 
         return ApiResponse.success("Login successful", Map.of(

@@ -19,13 +19,14 @@ public class JwtUtil {
     @Value("${app.jwt.expiration}")
     private long jwtExpiration;
 
-    private Key getSigningKey() {
+    public Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("role", role)   // 🔥 ADD ROLE
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
