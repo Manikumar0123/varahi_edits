@@ -382,7 +382,7 @@ async function loadDashboard(){
     const res=await fetch(API+'/api/admin/dashboard',{headers:authHeaders()});
     const data=await res.json();
     if(data.success){
-      const s=data.data;
+      const s = data.data || data;
       document.getElementById('s-total').textContent=s.total||0;
       document.getElementById('s-pending').textContent=s.pending||0;
       document.getElementById('s-confirmed').textContent=s.confirmed||0;
@@ -430,9 +430,10 @@ function renderServiceChart(byService){
 
 async function loadAllBookings(){
   try{
-    const res=await fetch(API+'/api/admin/bookings',{headers:authHeaders()});
-    const data=await res.json();
-    if(data.success){allBookings=data.data;renderTable();}
+	if(data.success){
+	  allBookings=data.data;
+	  renderTable();
+	}
   }catch(e){
     allBookings=[
       {id:47,name:'Priya Sharma',email:'priya@gmail.com',phone:'+919876543210',service:'Wedding Highlights',status:'PENDING',createdAt:'2025-06-10T10:30:00',message:'Wedding on July 20th'},
