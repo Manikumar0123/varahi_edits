@@ -22,7 +22,66 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
+//    private final JwtAuthFilter jwtAuthFilter;
+//
+//    @Value("${app.cors.allowed-origins}")
+//    private String allowedOrigins;
+//
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//
+//        http
+//            .csrf(AbstractHttpConfigurer::disable)
+//            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//
+//            .authorizeHttpRequests(auth -> auth
+//
+//            	    // ✅ ALLOW ALL HTML PAGES
+//            	    .requestMatchers("/", "/home", "/admin", "/admin/**").permitAll()
+//
+//            	    // ✅ STATIC FILES
+//            	    .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
+//
+//            	    // ✅ PUBLIC APIs
+//            	    .requestMatchers("/api/auth/**").permitAll()
+//            	    .requestMatchers("/api/bookings/**").permitAll()
+//            	    .requestMatchers("/api/images/**").permitAll()
+//            	    // 🔐 SECURE ADMIN APIs
+//            	    .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+//
+//            	    // ❗ IMPORTANT
+//            	    .anyRequest().permitAll()   // 🔥 CHANGE THIS
+//            	)
+//
+//            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+//
+//        return http.build();
+//    }
+//
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//
+//        CorsConfiguration config = new CorsConfiguration();
+//
+//        config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+//        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+//        config.setAllowedHeaders(List.of("*"));
+//        config.setAllowCredentials(true);
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", config);
+//
+//        return source;
+//    }
+//
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+	
+	
+	private final JwtAuthFilter jwtAuthFilter;
 
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
@@ -37,23 +96,25 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
-            	    // ✅ ALLOW ALL HTML PAGES
-            	    .requestMatchers("/", "/home", "/admin", "/admin/**").permitAll()
+                // ✅ PUBLIC PAGES
+                .requestMatchers("/", "/home", "/admin", "/admin/**").permitAll()
 
-            	    // ✅ STATIC FILES
-            	    .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
+                // ✅ STATIC FILES
+                .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
 
-            	    // ✅ PUBLIC APIs
-            	    .requestMatchers("/api/auth/**").permitAll()
-            	    .requestMatchers("/api/bookings/**").permitAll()
-            	    .requestMatchers("/api/images/**").permitAll()
-            	    // 🔐 SECURE ADMIN APIs
-            	    .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                // ✅ PUBLIC APIs (VERY IMPORTANT)
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/bookings/**").permitAll()
+                .requestMatchers("/api/images/**").permitAll()
 
-            	    // ❗ IMPORTANT
-            	    .anyRequest().permitAll()   // 🔥 CHANGE THIS
-            	)
+                // 🔐 ADMIN APIs
+                .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
 
+                // ❗ everything else allowed (you can secure later)
+                .anyRequest().permitAll()
+            )
+
+            // ✅ Add JWT filter
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
